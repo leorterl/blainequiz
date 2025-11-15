@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Are You More Security-Aware Than Blaine?</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Import Google Font: Work Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Configure Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Work Sans', 'sans-serif'],
+                    },
+                    colors: {
+                        'wiz-blue': '#306BFF', // Vibrant Blue from Brand Guidelines
+                        'wiz-purple': '#2858D6', // Darker blue for hover
+                        'wiz-pink': '#FF429D', // Accent Pink from Brand Guidelines
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Custom styles for the app */
+        body {
+            font-family: 'Work Sans', sans-serif;
+        }
+
+        /* Smooth transitions between pages */
+        .page {
+            display: none; /* Hidden by default */
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Custom styles for option buttons */
+        .option-btn {
+            transition: all 0.2s ease;
+        }
+
+        .option-btn.correct {
+            background-color: #D1FAE5; /* green-100 */
+            border-color: #10B981; /* green-500 */
+            color: #065F46; /* green-800 */
+            font-weight: bold;
+        }
+
+        .option-btn.incorrect {
+            background-color: #FEE2E2; /* red-100 */
+            border-color: #EF4444; /* red-500 */
+            color: #991B1B; /* red-800 */
+            font-weight: bold;
+        }
+
+        .option-btn.selected {
+             /* A neutral selection color before feedback */
+            background-color: #DBEAFE; /* blue-100 */
+            border-color: #3B82F6; /* blue-500 */
+        }
+        
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.9;
+        }
+
+        /* Style for the comparison bars */
+        .score-bar-container {
+            background-color: #E5E7EB; /* gray-200 */
+            border-radius: 9999px;
+            overflow: hidden;
+            height: 1.5rem;
+            width: 100%;
+        }
+        .score-bar {
+            background-color: #306BFF; /* wiz-blue */
+            height: 100%;
+            border-radius: 9999px;
+            transition: width 1s ease-out;
+        }
+
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+
+    <!-- Main App Container -->
+    <div id="app-container" class="w-full max-w-2xl bg-white rounded-2xl shadow-2xl overflow-hidden">
+        
+        <!-- Logo Header -->
+        <div class="p-6 md:p-8 border-b border-gray-200 flex justify-center">
+            <img 
+                src="https://upload.wikimedia.org/wikipedia/he/4/4d/Wiz_company_logo.png" 
+                alt="Wiz Logo" 
+                class="h-10"
+                onerror="this.src='https://placehold.co/150x40/ffffff/306BFF?text=Wiz'"
+            >
+        </div>
+
+        <!-- 1. Landing Page -->
+        <div id="landing-page" class="page active px-8 pb-8 md:px-12 md:pb-12 pt-6 md:pt-8 text-center">
+            <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+                Are You More Security-Aware Than Blaine?
+            </h1>
+            <p class="text-xl text-gray-600 mb-8">
+                Blaine scored 2/10 on basic cloud security questions. Can you beat him?
+            </p>
+            
+            <!-- Video/Image Section -->
+            <div class="mb-8">
+                <!-- Embedded video thumbnail -->
+                <div class="relative bg-gray-900 rounded-lg shadow-lg cursor-pointer group">
+                    <img 
+                        src="https://i.ibb.co/d4Gtw9nn/Gemini-Generated_Image-lvd83wlvd83wlvd8.png" 
+                        alt="Blaine looking confused" 
+                        class="w-48 h-48 rounded-full mx-auto object-cover border-4 border-white shadow-lg"
+                        onerror="this.src='https://placehold.co/192x192/E0E0E0/7F7F7F?text=Blaine'"
+                    >
+                    <div class="absolute inset-0 flex items-center justify-center bg-black bg-opacity-40 group-hover:bg-opacity-50 transition-opacity">
+                         <!-- Play button icon -->
+                        <svg class="w-20 h-20 text-white opacity-80" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                        </svg>
+                    </div>
+                </div>
+                 <p class="text-center text-gray-500 mt-2">"Watch how Blaine did on Firewall Feud"</p>
+            </div>
+
+            <button id="start-quiz-btn" class="w-full md:w-auto bg-wiz-blue hover:bg-wiz-purple text-white font-bold py-4 px-12 rounded-full text-xl shadow-lg transform hover:scale-105 transition-transform">
+                TAKE THE QUIZ
+            </button>
+            <p class="text-gray-500 mt-4 text-sm">
+                10 questions • 3 minutes • No email required
+            </p>
+        </div>
+
+        <!-- 2. Quiz Page -->
+        <div id="quiz-page" class="page px-8 pb-8 md:px-12 md:pb-12 pt-6 md:pt-8">
+            <!-- Progress -->
+            <div id="progress-text" class="text-center text-wiz-blue font-semibold mb-4">QUESTION 1 OF 10</div>
+            <div class="w-full bg-gray-200 rounded-full h-2 mb-6">
+                <div id="progress-bar" class="bg-wiz-blue h-2 rounded-full" style="width: 10%"></div>
+            </div>
+
+            <!-- Question -->
+            <div class="mb-6">
+                <p id="question-scenario" class="text-lg md:text-xl text-gray-800 leading-relaxed"></p>
+            </div>
+
+            <!-- Options -->
+            <div id="options-container" class="space-y-3">
+                <!-- Options will be dynamically inserted here -->
+            </div>
+
+            <!-- Feedback Section -->
+            <div id="feedback-section" class="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200" style="display: none;">
+                <div id="your-answer-feedback" class="text-lg font-medium mb-2"></div>
+                <div id="blaine-answer-feedback" class="text-sm text-gray-600 mb-2"></div>
+                <div id="correct-answer-feedback" class="text-sm text-green-700 font-semibold mb-3"></div>
+                
+                <h4 class="font-bold text-gray-900 mb-1">Why:</h4>
+                <p id="feedback-why" class="text-gray-700"></p>
+            </div>
+            
+            <!-- Next Button -->
+            <button id="next-question-btn" class="w-full bg-wiz-blue hover:bg-wiz-purple text-white font-bold py-3 px-8 rounded-full text-lg mt-8 shadow-lg transform hover:scale-105 transition-all" style="display: none;">
+                Next Question →
+            </button>
+        </div>
+
+        <!-- 3. Results Page -->
+        <div id="results-page" class="page px-8 pb-8 md:px-12 md:pb-12 pt-6 md:pt-8 text-center">
+            <h2 class="text-2xl text-gray-600 mb-2">Your Score</h2>
+            <div id="score-display" class="text-7xl font-bold text-wiz-blue mb-8">8/10</div>
+
+            <!-- Comparison Graphic -->
+            <div class="space-y-4 text-left max-w-md mx-auto mb-8">
+                <div>
+                    <div class="flex justify-between text-sm font-semibold mb-1">
+                        <span>You</span>
+                        <span id="your-score-percent">80%</span>
+                    </div>
+                    <div class="score-bar-container">
+                        <div id="your-score-bar" class="score-bar bg-wiz-blue"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm font-semibold mb-1">
+                        <span>Average Executive</span>
+                        <span>60%</span>
+                    </div>
+                    <div class="score-bar-container">
+                        <div id="avg-exec-score-bar" class="score-bar bg-gray-400" style="width: 60%"></div>
+                    </div>
+                </div>
+                <div>
+                    <div class="flex justify-between text-sm font-semibold mb-1">
+                        <span>Blaine</span>
+                        <span>20%</span>
+                    </div>
+                    <div class="score-bar-container">
+                        <div id="blaine-score-bar" class="score-bar bg-wiz-pink" style="width: 20%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Added Blaine Image -->
+            <img 
+                src="https://i.ibb.co/9kLfZ63B/Gemini-Generated-Image-ipvgtnipvgtnipvg.png" 
+                alt="Blaine looking defeated" 
+                class="w-48 h-48 rounded-full mx-auto object-cover border-4 border-wiz-pink shadow-lg my-8"
+                onerror="this.src='https://placehold.co/192x192/FF429D/FFFFFF?text=Blaine!'"
+            >
+
+            <div id="result-text" class="text-2xl font-semibold text-gray-900 mb-4">
+                🎉 You're significantly more security-aware than Blaine!
+            </div>
+            <p id="result-subtext" class="text-gray-600 mb-4">
+                You scored better than 67% of executives who've taken this quiz.
+            </p>
+            <p id="weakest-area" class="text-gray-600 mb-8">
+                Your weakest area was Incident Response (Questions 5, 8) — consider reviewing your incident response plan with your security team.
+            </p>
+
+            <!-- Share Section -->
+            <div class="bg-gray-50 p-6 rounded-lg mb-8">
+                <h3 class="font-bold text-lg mb-4">Share Your Results</h3>
+                <!-- Share Card Preview -->
+                <div class="border border-gray-300 rounded-lg p-4 bg-white shadow-sm mb-4">
+                    <p class="text-gray-500 text-sm">blainequiz.com</p>
+                    <p class="font-bold text-gray-900 text-lg">I scored <span id="share-score">8</span>/10 on cloud security basics.</p>
+                    <p class="text-gray-700">Blaine scored 2/10. Are you more security-aware than Blaine? #FirewallFeud</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-2 justify-center">
+                    <button class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.783-1.75-1.75s.784-1.75 1.75-1.75 1.75.783 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path></svg>
+                        Share on LinkedIn
+                    </button>
+                    <button class="bg-black hover:bg-gray-800 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25c3.308 0 6 2.692 6 6v7.5c0 3.308-2.692 6-6 6h-12.488c-3.308 0-6-2.692-6-6v-7.5c0-3.308 2.692-6 6-6h12.488zm-3.84 6.75h-2.184c-.452 0-.828.376-.828.828v1.362h3.012c-.132 1.548-.26 3.092-.392 4.638h-2.62v7.122h-3.336v-7.122h-2.388v-4.638h2.388v-1.152c0-2.112 1.292-3.264 3.176-3.264l2.652.004v4.512z"></path></svg>
+                        Share on X
+                    </button>
+                    <button id="copy-link-btn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                        Copy Link
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bottom CTAs -->
+            <div class="border-t pt-8">
+                <p class="text-lg text-gray-800 mb-4">Want to see how Blaine did?</p>
+                <button class="bg-gray-800 hover:bg-black text-white font-bold py-3 px-8 rounded-full text-lg mb-8 shadow-lg transform hover:scale-105 transition-all">
+                    Watch Firewall Feud →
+                </button>
+                
+                <p class="text-gray-600 max-w-lg mx-auto">
+                    Not satisfied with your score? Understanding cloud security doesn't have to be this hard. Wiz helps security teams identify and fix critical vulnerabilities before they become Blaine's next answer on Firewall Feud.
+                </p>
+                <button class="text-wiz-blue hover:text-wiz-purple font-semibold mt-4">
+                    Learn more about Wiz
+                </button>
+            </div>
+        </div>
+
+    </div> <!-- End App Container -->
+
+    <!-- Hidden text area for copy-to-clipboard -->
+    <textarea id="copy-text-area" class="absolute -left-full"></textarea>
+    <div id="copy-notification" class="fixed bottom-5 right-5 bg-gray-900 text-white py-2 px-4 rounded-lg shadow-lg" style="display: none; animation: fadeOut 3s forwards;">
+        Link copied to clipboard!
+    </div>
+
+<script>
+    const quizData = [
+        {
+            question: "QUESTION 1 OF 10",
+            category: "Access Control",
+            scenario: "Your developer wants to quickly test an API integration and asks for temporary admin access to your production AWS environment \"just for an hour.\"\n\nWhat do you do?",
+            options: [
+                { text: "A) Grant admin access but ask them to be careful", isCorrect: false },
+                { text: "B) Give them read-only access and help them set up a test environment", isCorrect: true },
+                { text: "C) Approve it if they promise to document what they're doing", isCorrect: false },
+                { text: "D) Let them use your personal credentials so there's no audit trail", isCorrect: false }
+            ],
+            blaineAnswerText: "A) Grant admin access but ask them to be careful",
+            correctAnswerText: "B) Give them read-only access and help them set up a test environment",
+            why: "Temporary admin access to production is never a good idea, even \"just for an hour.\" Principle of least privilege means developers should use test environments that mirror production, not production itself. Blaine's approach is how you end up with \"just testing\" becoming \"accidentally deleted the database.\""
+        },
+        {
+            question: "QUESTION 2 OF 10",
+            category: "Authentication",
+            scenario: "You're creating a password for your company's admin portal. Which password is most secure?",
+            options: [
+                { text: "A) Company2024!", isCorrect: false },
+                { text: "B) Tr0ub4dor&3", isCorrect: false },
+                { text: "C) correct-horse-battery-staple", isCorrect: true },
+                { text: "D) Use the \"Forgot Password\" feature every time you need to log in", isCorrect: false }
+            ],
+            blaineAnswerText: "A) Company2024!",
+            correctAnswerText: "C) correct-horse-battery-staple",
+            why: "Length beats complexity. A long passphrase with random, unrelated words is much harder to crack than a short password with predictable substitutions (@ for a, 1 for i, etc.). XKCD was right on this one. Blaine probably also uses the same password for his personal Netflix account."
+        },
+        {
+            question: "QUESTION 3 OF 10",
+            category: "Data Security",
+            scenario: "Your marketing team wants to store customer data in a new cloud storage bucket. What permission setting do you use?",
+            options: [
+                { text: "A) Public - makes it easier for the team to access", isCorrect: false },
+                { text: "B) Private with specific IAM roles for authorized users only", isCorrect: true },
+                { text: "C) Public read, private write - best of both worlds", isCorrect: false },
+                { text: "D) Whatever the default setting is, the cloud provider knows best", isCorrect: false }
+            ],
+            blaineAnswerText: "D) Whatever the default setting is, the cloud provider knows best",
+            correctAnswerText: "B) Private with specific IAM roles for authorized users only",
+            why: "Customer data should NEVER be publicly accessible. Default settings vary and aren't guaranteed to be secure. Principle of least privilege means explicitly granting access only to those who need it, with proper authentication and logging. The number of data breaches caused by misconfigured S3 buckets alone could fill a very depressing museum."
+        },
+        {
+            question: "QUESTION 4 OF 10",
+            category: "Secrets Management",
+            scenario: "A GitHub repository for your internal project currently has these credentials in the code. What should you do FIRST?\n\nAPI_KEY = \"sk_live_4fHnN2k8sP9qL3mR7vT1\"\nDATABASE_URL = \"postgresql://admin:password123@prod-db.company.com\"",
+            options: [
+                { text: "A) Delete the repository immediately", isCorrect: false },
+                { text: "B) Make the repository private so only your team can see it", isCorrect: false },
+                { text: "C) Rotate/revoke all exposed credentials immediately", isCorrect: true },
+                { text: "D) Move the credentials to a config file that's also in the repository", isCorrect: false }
+            ],
+            blaineAnswerText: "B) Make the repository private so only your team can see it",
+            correctAnswerText: "C) Rotate/revoke all exposed credentials immediately",
+            why: "Once credentials are committed to a repository—even briefly, even if \"only\" your team saw them—you must assume they're compromised. Git history preserves everything. Making the repo private doesn't erase what was already exposed. Rotate the credentials FIRST, then deal with the repository. Then implement secrets management so this never happens again. (And check if Blaine has any credentials in his Slack DMs while you're at it.)"
+        },
+        {
+            question: "QUESTION 5 OF 10",
+            category: "Incident Response",
+            scenario: "Your company is experiencing a potential security incident at 2 AM. Who should be notified first?",
+            options: [
+                { text: "A) The CEO, because they're in charge", isCorrect: false },
+                { text: "B) The incident response team / security operations", isCorrect: true },
+                { text: "C) Legal, to prepare for potential lawsuits", isCorrect: false },
+                { text: "D) Marketing, to prepare a statement", isCorrect: false }
+            ],
+            blaineAnswerText: "A) The CEO, because they're in charge",
+            correctAnswerText: "B) The incident response team / security operations",
+            why: "During an active incident, speed matters. The incident response team is trained to triage, contain, and investigate. They'll escalate to executives and other stakeholders according to the incident response plan. Calling the CEO first wastes precious minutes and risks having someone untrained make critical technical decisions. (Blaine will find out soon enough when he checks Slack at 8 AM.)"
+        },
+        {
+            question: "QUESTION 6 OF 10",
+            category: "Access Control",
+            scenario: "An employee is leaving the company on Friday. When should their access be revoked?",
+            options: [
+                { text: "A) Friday at 5 PM when they leave", isCorrect: false },
+                { text: "B) Monday morning to give them time to wrap up", isCorrect: false },
+                { text: "C) Friday at COB, but only if they seem upset", isCorrect: false },
+                { text: "D) Immediately when HR processes the termination", isCorrect: true }
+            ],
+            blaineAnswerText: "A) Friday at 5 PM when they leave",
+            correctAnswerText: "D) Immediately when HR processes the termination",
+            why: "Access should be revoked as soon as the employment decision is made, not when the person physically leaves the building. Departing employees—even friendly ones—shouldn't have access during their final hours. This prevents both intentional sabotage and accidental damage. Ideally, IT and HR coordinate so access revocation happens simultaneously with notification. Waiting until 5 PM is how you end up with \"I just wanted to download my personal files\" turning into a data exfiltration incident."
+        },
+        {
+            question: "QUESTION 7 OF 10",
+            category: "Authentication",
+            scenario: "Your security team wants to implement Multi-Factor Authentication (MFA) for all employees. Your VP of Sales says it's \"too inconvenient\" and will slow down the team. What do you do?",
+            options: [
+                { text: "A) Make MFA optional for the sales team to keep them happy", isCorrect: false },
+                { text: "B) Implement MFA universally with no exceptions", isCorrect: true },
+                { text: "C) Only require MFA for the security team since they understand it", isCorrect: false },
+                { text: "D) Implement MFA but allow SMS as the second factor to make it easier", isCorrect: false }
+            ],
+            blaineAnswerText: "A) Make MFA optional for the sales team to keep them happy",
+            correctAnswerText: "B) Implement MFA universally with no exceptions",
+            why: "Security policies with exceptions aren't security policies—they're suggestions. Sales teams are high-value targets (access to customer data, financial info, etc.). Attackers will target the weakest link, which becomes any team that's opted out. Implement MFA universally using modern methods (authenticator apps, hardware keys) that minimize friction. Convenience cannot trump security for something as fundamental as authentication. Blaine's approach is how you end up with \"the sales team got phished\" as the root cause in your incident report."
+        },
+        {
+            question: "QUESTION 8 OF 10",
+            category: "Incident Response",
+            scenario: "You discover a critical vulnerability in your production application. What's your priority order?",
+            options: [
+                { text: "A) Patch it → Notify customers → Investigate how it happened", isCorrect: true },
+                { text: "B) Investigate how it happened → Patch it → Notify customers", isCorrect: false },
+                { text: "C) Notify customers → Patch it → Investigate how it happened", isCorrect: false },
+                { text: "D) Hope no one finds it and quietly patch it over the weekend", isCorrect: false }
+            ],
+            blaineAnswerText: "D) Hope no one finds it and quietly patch it over the weekend",
+            correctAnswerText: "A) Patch it → Notify customers → Investigate how it happened",
+            why: "Containment comes first. Close the vulnerability to prevent active exploitation, then communicate transparently with affected parties, then investigate root cause. Blaine's \"hope and pray\" strategy is not an incident response plan. Modern compliance frameworks and breach notification laws require timely disclosure anyway. Trying to hide it makes everything worse when it inevitably comes out."
+        },
+        {
+            question: "QUESTION 9 OF 10",
+            category: "Authentication",
+            scenario: "Which of these is the LEAST effective security control?",
+            options: [
+                { text: "A) Principle of least privilege (users only get access they need)", isCorrect: false },
+                { text: "B) Security awareness training for all employees", isCorrect: false },
+                { text: "C) A policy requiring quarterly password changes", isCorrect: true },
+                { text: "D) Network segmentation to isolate critical systems", isCorrect: false }
+            ],
+            blaineAnswerText: "B) Security awareness training for all employees",
+            correctAnswerText: "C) A policy requiring quarterly password changes",
+            why: "Forced password rotation has been debunked by NIST and other security bodies. It leads to predictable patterns (Summer2024! → Fall2024! → Winter2024!), weak passwords, and password reuse. Modern guidance: use long passphrases, enable MFA, and only force changes if there's evidence of compromise. Blaine picked training because he finds the annual security videos boring. (They are. But they're also necessary.)"
+        },
+        {
+            question: "QUESTION 10 OF 10",
+            category: "Network Security",
+            scenario: "Your cloud infrastructure uses a \"hub and spoke\" network architecture. The marketing team wants direct internet access from their spoke network to speed up their ad platform integrations. What do you recommend?",
+            options: [
+                { text: "A) Allow it, marketing needs to move fast", isCorrect: false },
+                { text: "B) Route all traffic through the hub with proper inspection and logging", isCorrect: true },
+                { text: "C) Give them direct internet but monitor it closely", isCorrect: false },
+                { text: "D) Let them set up their own separate cloud environment so it's not your problem", isCorrect: false }
+            ],
+            blaineAnswerText: "A) Allow it, marketing needs to move fast",
+            correctAnswerText: "B) Route all traffic through the hub with proper inspection and logging",
+            why: "The entire point of hub-and-spoke architecture is centralized security controls. Poking holes in it for convenience defeats the purpose. All outbound traffic should route through the hub where you can inspect, log, and apply security policies consistently. \"Moving fast\" doesn't mean \"moving unsafely.\" Blaine's approach creates shadow IT and security blind spots. (Also, Blaine doesn't know what hub-and-spoke architecture is and guessed based on the word \"fast.\")"
+        }
+    ];
+
+    let currentQuestionIndex = 0;
+    let userScore = 0;
+    let userAnswers = []; // To track weakest area
+    let isAnswerSelected = false;
+
+    // DOM Elements
+    const landingPage = document.getElementById('landing-page');
+    const quizPage = document.getElementById('quiz-page');
+    const resultsPage = document.getElementById('results-page');
+
+    const startQuizBtn = document.getElementById('start-quiz-btn');
+    const nextQuestionBtn = document.getElementById('next-question-btn');
+    const copyLinkBtn = document.getElementById('copy-link-btn');
+
+    const progressText = document.getElementById('progress-text');
+    const progressBar = document.getElementById('progress-bar');
+    const questionScenario = document.getElementById('question-scenario');
+    const optionsContainer = document.getElementById('options-container');
+    const feedbackSection = document.getElementById('feedback-section');
+    const yourAnswerFeedback = document.getElementById('your-answer-feedback');
+    const blaineAnswerFeedback = document.getElementById('blaine-answer-feedback');
+    const correctAnswerFeedback = document.getElementById('correct-answer-feedback');
+    const feedbackWhy = document.getElementById('feedback-why');
+
+    // Results Page Elements
+    const scoreDisplay = document.getElementById('score-display');
+    const yourScoreBar = document.getElementById('your-score-bar');
+    const yourScorePercent = document.getElementById('your-score-percent');
+    const resultText = document.getElementById('result-text');
+    const resultSubtext = document.getElementById('result-subtext');
+    const weakestArea = document.getElementById('weakest-area');
+    const shareScore = document.getElementById('share-score');
+
+    // Event Listeners
+    startQuizBtn.addEventListener('click', startQuiz);
+    nextQuestionBtn.addEventListener('click', nextQuestion);
+    copyLinkBtn.addEventListener('click', copyLink);
+
+    function startQuiz() {
+        landingPage.classList.remove('active');
+        quizPage.classList.add('active');
+        loadQuestion(currentQuestionIndex);
+    }
+
+    function loadQuestion(index) {
+        const question = quizData[index];
+        
+        progressText.textContent = question.question;
+        progressBar.style.width = `${((index + 1) / quizData.length) * 100}%`;
+        questionScenario.innerText = question.scenario; // Use innerText to preserve newlines
+        
+        optionsContainer.innerHTML = ''; // Clear old options
+        
+        question.options.forEach((option, i) => {
+            const button = document.createElement('button');
+            button.innerHTML = option.text;
+            button.classList.add('option-btn', 'w-full', 'text-left', 'p-4', 'border', 'rounded-lg', 'text-gray-700', 'border-gray-300', 'hover:bg-gray-100');
+            button.dataset.index = i;
+            button.addEventListener('click', () => selectAnswer(i, button));
+            optionsContainer.appendChild(button);
+        });
+
+        feedbackSection.style.display = 'none';
+        nextQuestionBtn.style.display = 'none';
+        isAnswerSelected = false;
+    }
+
+function selectAnswer(selectedIndex) {
+    if (isAnswerSelected) return; // Prevent multiple selections
+    isAnswerSelected = true;
+
+    const question = quizData[currentQuestionIndex];
+    const selectedOption = question.options[selectedIndex];
+    
+    // Store answer for results
+    userAnswers.push({
+        questionIndex: currentQuestionIndex,
+        isCorrect: selectedOption.isCorrect,
+        category: question.category
+    });
+    
+    if (selectedOption.isCorrect) {
+        userScore++;
+    }
+
+    // Update feedback text
+    yourAnswerFeedback.innerHTML = `Your Answer: ${selectedOption.text} ${selectedOption.isCorrect ? '<span class="text-green-500">✓</span>' : '<span class="text-red-500">✗</span>'}`;
+    blaineAnswerFeedback.innerHTML = `Blaine's Answer: ${question.blaineAnswerText} <span class="text-red-500">✗</span>`;
+    correctAnswerFeedback.innerHTML = `Correct Answer: ${question.correctAnswerText}`;
+    feedbackWhy.innerHTML = question.why;
+
+    // Style buttons
+    const optionButtons = optionsContainer.querySelectorAll('.option-btn');
+    optionButtons.forEach((btn, i) => {
+        btn.disabled = true;
+        const option = question.options[i];
+
+        if (i === selectedIndex) {
+            // This is the one the user clicked
+            btn.classList.add(option.isCorrect ? 'correct' : 'incorrect');
+        } else if (option.isCorrect) {
+            // This is the correct answer (and not the one clicked)
+            btn.classList.add('correct');
+        }
+    });
+
+    // Show feedback and next button
+    feedbackSection.style.display = 'block';
+    if (currentQuestionIndex < quizData.length - 1) {
+        nextQuestionBtn.textContent = 'Next Question →';
+    } else {
+        nextQuestionBtn.textContent = 'See Your Results →';
+    }
+    nextQuestionBtn.style.display = 'block';
+}
+
+    function nextQuestion() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            loadQuestion(currentQuestionIndex);
+        } else {
+            showResults();
+        }
+    }
+
+    function showResults() {
+        quizPage.classList.remove('active');
+        resultsPage.classList.add('active');
+
+        const scorePercent = (userScore / quizData.length) * 100;
+        
+        // Set scores
+        scoreDisplay.textContent = `${userScore}/${quizData.length}`;
+        yourScorePercent.textContent = `${scorePercent}%`;
+        shareScore.textContent = userScore;
+        
+        // Animate score bar
+        setTimeout(() => {
+            yourScoreBar.style.width = `${scorePercent}%`;
+        }, 100); // Small delay to allow CSS transition
+
+        // Set result text
+        if (userScore > 8) {
+            resultText.textContent = "🎉 You're a security expert!";
+            resultSubtext.textContent = "Blaine is taking notes. You scored better than 90% of executives.";
+        } else if (userScore > 2) {
+            resultText.textContent = "🎉 You're significantly more security-aware than Blaine!";
+            resultSubtext.textContent = `You scored better than ${Math.min(userScore * 10 + 30, 90)}% of executives who've taken this quiz.`; // Adjusted mockup logic
+        } else {
+            resultText.textContent = "😬 Uh oh. You and Blaine should talk.";
+            resultSubtext.textContent = "But hey, every day is a learning opportunity! Don't worry, Blaine didn't get it either.";
+        }
+
+        // Calculate weakest area
+        const incorrectAnswers = userAnswers.filter(a => !a.isCorrect);
+        let weakestCategory = "None! You aced it!";
+        let weakestCategoryText = "You got a perfect score! No weak areas here. Great job!";
+
+        if (incorrectAnswers.length > 0) {
+            const categoryCounts = incorrectAnswers.reduce((acc, ans) => {
+                acc[ans.category] = (acc[ans.category] || 0) + 1;
+                return acc;
+            }, {});
+
+            weakestCategory = Object.keys(categoryCounts).reduce((a, b) => categoryCounts[a] > categoryCounts[b] ? a : b);
+            
+            const categoryQuestions = quizData
+                .map((q, i) => q.category === weakestCategory ? i + 1 : null)
+                .filter(q => q !== null)
+                .join(', ');
+            
+            weakestCategoryText = `Your weakest area was ${weakestCategory} (Questions ${categoryQuestions}) — consider reviewing those concepts!`;
+        }
+
+        weakestArea.textContent = weakestCategoryText;
+    }
+
+    function copyLink() {
+        const textToCopy = `I scored ${userScore}/10 on cloud security basics. Blaine scored 2/10. Are you more security-aware than Blaine? #FirewallFeud https://example.com/blaine-quiz`; // Placeholder URL
+        const textArea = document.getElementById('copy-text-area');
+        const notification = document.getElementById('copy-notification');
+        
+        textArea.value = textToCopy;
+        textArea.select();
+        try {
+            document.execCommand('copy');
+            notification.style.display = 'block';
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        } catch (err) {
+            console.error('Failed to copy text: ', err);
+        }
+    }
+
+</script>
+
+</body>
+</html>
